@@ -86,14 +86,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
             </a>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 px-3 py-1.5 rounded-full bg-navy-900/75 border border-white/10 backdrop-blur-md">
+            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-full bg-navy-900/75 border border-white/10 backdrop-blur-md">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.id;
                 return (
                   <a
                     key={link.id}
                     href={link.href}
-                    className={`relative px-3.5 py-1.5 rounded-full text-xs xl:text-sm font-semibold transition-all duration-300 ${
+                    className={`relative whitespace-nowrap px-2.5 xl:px-3.5 py-1.5 rounded-full text-xs xl:text-sm font-semibold transition-all duration-300 ${
                       isActive
                         ? 'text-white bg-white/10 shadow-sm'
                         : 'text-slate-300 hover:text-white hover:bg-white/5'
@@ -109,12 +109,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
             </nav>
 
             {/* Desktop Language Switcher + CTA Button */}
-            <div className="hidden lg:flex items-center gap-2.5">
+            <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 shrink-0">
               {/* Language Switcher Button */}
               <button
                 onClick={toggleLang}
                 title={isRTL ? 'Switch to English' : 'التبديل إلى اللهجة الكويتية (العربية)'}
-                className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-full text-xs font-extrabold text-white bg-navy-900/90 hover:bg-brandOrange-500/20 border border-white/15 hover:border-brandOrange-500/60 transition-all duration-300 shadow-md group"
+                className="inline-flex items-center gap-1.5 xl:gap-2 whitespace-nowrap px-3 xl:px-3.5 py-2.5 rounded-full text-xs font-extrabold text-white bg-navy-900/90 hover:bg-brandOrange-500/20 border border-white/15 hover:border-brandOrange-500/60 transition-all duration-300 shadow-md group"
               >
                 <Globe className="w-4 h-4 text-brandOrange-400 group-hover:rotate-12 transition-transform" />
                 <span>{lang === 'ar' ? 'EN | English' : 'AR | كويتي'}</span>
@@ -122,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation }) => {
 
               <button
                 onClick={() => onOpenConsultation()}
-                className="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-navy-800 to-navy-700 hover:from-brandOrange-600 hover:to-brandOrange-500 border border-brandOrange-500/35 hover:border-brandOrange-400/80 transition-all duration-300 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] group"
+                className="relative inline-flex items-center gap-2 whitespace-nowrap px-4 xl:px-5 py-2.5 rounded-full text-xs xl:text-sm font-bold text-white bg-gradient-to-r from-navy-800 to-navy-700 hover:from-brandOrange-600 hover:to-brandOrange-500 border border-brandOrange-500/35 hover:border-brandOrange-400/80 transition-all duration-300 shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] group"
               >
                 <WhatsAppIcon className="w-4 h-4 text-[#25D366] group-hover:text-white transition-colors" />
                 <span>{isRTL ? 'كلّم مستشارنا' : 'Talk to an Expert'}</span>

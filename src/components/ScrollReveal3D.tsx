@@ -28,7 +28,7 @@ export const ScrollProgress3D: React.FC = () => {
         style={{ scaleX }}
       />
 
-      {/* Subtle 3D Parallax Floating Rings in Background (Disabled when reduced motion is preferred) */}
+      {/* Subtle 3D Parallax Floating Rings in Background */}
       {!prefersReducedMotion && (
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ perspective: '1200px' }}>
           <motion.div
@@ -115,6 +115,7 @@ interface TiltCard3DProps {
   children: React.ReactNode;
   index?: number;
   className?: string;
+  wrapperClassName?: string;
   intensity?: number;
   onClick?: () => void;
 }
@@ -126,6 +127,7 @@ export const TiltCard3D: React.FC<TiltCard3DProps> = ({
   children,
   index = 0,
   className = '',
+  wrapperClassName = '',
   intensity = 6,
   onClick,
 }) => {
@@ -156,14 +158,14 @@ export const TiltCard3D: React.FC<TiltCard3DProps> = ({
 
   if (prefersReducedMotion || intensity === 0) {
     return (
-      <div onClick={onClick} className={`relative h-full ${className}`}>
+      <div onClick={onClick} className={`relative h-full ${wrapperClassName} ${className}`}>
         {children}
       </div>
     );
   }
 
   return (
-    <div style={{ perspective: '1200px' }} className="h-full">
+    <div style={{ perspective: '1200px' }} className={`h-full ${wrapperClassName}`}>
       <motion.div
         ref={cardRef}
         onClick={onClick}
@@ -198,7 +200,7 @@ export const TiltCard3D: React.FC<TiltCard3DProps> = ({
         style={{
           transformStyle: 'preserve-3d',
         }}
-        className={`relative ${className}`}
+        className={`relative h-full ${className}`}
       >
         {/* Dynamic 3D Specular Glare Overlay */}
         {tilt.isHovered && (

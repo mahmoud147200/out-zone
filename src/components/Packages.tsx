@@ -92,7 +92,8 @@ export const Packages: React.FC<PackagesProps> = ({ onSelectPackage, onOpenPoste
                 key={pkg.id}
                 index={idx}
                 intensity={8}
-                className={`h-full ${isMedium ? 'lg:-translate-y-3 z-20' : 'z-10'}`}
+                wrapperClassName={isMedium ? 'lg:-translate-y-3 z-20' : 'z-10'}
+                className="h-full"
               >
                 <div
                   onMouseEnter={() => setHoveredPackage(pkg.id)}

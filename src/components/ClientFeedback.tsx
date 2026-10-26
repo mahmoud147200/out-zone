@@ -37,7 +37,6 @@ export const ClientFeedback: React.FC<ClientFeedbackProps> = ({
   const [viewMode, setViewMode] = useState<'both' | 'carousel' | 'grid'>('both');
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Convert feedback items to ClientPoster[] format so clicking any screenshot opens the 3D multi-image Lightbox
   const feedbackGalleryPosters: ClientPoster[] = feedbackItems.map((item, idx) => ({
     id: item.id,
     title: `${item.clientName} — ${item.badge} (#${idx + 1})`,
@@ -134,7 +133,7 @@ export const ClientFeedback: React.FC<ClientFeedbackProps> = ({
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
-              <span>{isRTL ? 'شبكة كل الآراء (13)' : 'All Reviews Grid (13)'}</span>
+              <span>{isRTL ? 'شبكة كل الآراء' : 'All Reviews Grid'}</span>
             </button>
           </div>
         </Reveal3D>
@@ -208,11 +207,11 @@ export const ClientFeedback: React.FC<ClientFeedbackProps> = ({
                           </div>
 
                           {/* Screenshot Image */}
-                          <div className="relative flex-grow bg-navy-950 overflow-hidden">
+                          <div className="relative flex-grow bg-navy-950 overflow-hidden flex items-center justify-center p-1.5">
                             <img
                               src={item.image}
                               alt={item.clientName}
-                              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-contain rounded-xl group-hover:scale-103 transition-transform duration-500"
                             />
                             {isCenter && (
                               <div className="absolute top-2.5 left-2.5 w-8 h-8 rounded-full bg-navy-950/85 text-white border border-white/20 flex items-center justify-center shadow-lg group-hover:bg-brandOrange-500 transition-colors">
@@ -350,10 +349,10 @@ export const ClientFeedback: React.FC<ClientFeedbackProps> = ({
           </div>
         )}
 
-        {/* 2. Full 3D Tilt Grid of All 13 Client Feedback Screenshots */}
+        {/* 2. Symmetrical 3D Tilt Grid of Client Feedback Screenshots */}
         {(viewMode === 'both' || viewMode === 'grid') && (
           <div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
                 <h3 className="text-lg sm:text-2xl font-black text-white">
@@ -368,20 +367,20 @@ export const ClientFeedback: React.FC<ClientFeedbackProps> = ({
             </div>
 
             <div
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6"
               style={{ perspective: '1400px' }}
             >
-              {feedbackItems.map((item, idx) => (
+              {feedbackItems.slice(0, 12).map((item, idx) => (
                 <TiltCard3D
                   key={item.id}
                   index={idx}
-                  intensity={10}
+                  intensity={8}
                   onClick={() => onOpenPosterLightbox(feedbackGalleryPosters, idx)}
-                  className="group rounded-3xl overflow-hidden bg-navy-900/90 border border-white/10 hover:border-emerald-500/60 shadow-[0_15px_35px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_45px_rgba(16,185,129,0.22)] transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                  className="group rounded-3xl overflow-hidden bg-navy-900/90 border border-white/10 hover:border-emerald-500/60 shadow-[0_15px_35px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_45px_rgba(16,185,129,0.22)] transition-all duration-300 cursor-pointer flex flex-col justify-between h-full"
                 >
                   <div>
                     {/* Top WhatsApp Style Bar */}
-                    <div className="px-3.5 py-2.5 bg-gradient-to-r from-[#075E54] to-emerald-800 text-white flex items-center justify-between text-[10px] sm:text-xs font-bold">
+                    <div className="px-4 py-2.5 bg-gradient-to-r from-[#075E54] to-emerald-800 text-white flex items-center justify-between text-xs font-bold">
                       <div className="flex items-center gap-1.5 truncate">
                         <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366] shrink-0" />
                         <span className="truncate">{item.badge}</span>
@@ -392,35 +391,34 @@ export const ClientFeedback: React.FC<ClientFeedbackProps> = ({
                       </div>
                     </div>
 
-                    {/* Screenshot Preview */}
-                    <div className="relative aspect-[9/14] overflow-hidden bg-navy-950">
+                    {/* Unobstructed Screenshot Preview */}
+                    <div className="relative h-72 sm:h-80 overflow-hidden bg-navy-950 p-2 flex items-center justify-center">
                       <img
                         src={item.image}
                         alt={item.clientName}
                         loading="lazy"
-                        className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500 ease-out"
+                        className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-500 ease-out"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/15 to-transparent opacity-85 group-hover:opacity-65 transition-opacity" />
 
                       {/* Zoom Button */}
-                      <div className="absolute top-2.5 left-2.5 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-lg">
+                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-lg">
                         <ZoomIn className="w-4 h-4" />
                       </div>
-
-                      {/* Quote Overlay at Bottom of Image */}
-                      <div
-                        className={`absolute inset-x-0 bottom-0 p-3.5 ${
-                          isRTL ? 'text-right' : 'text-left'
-                        }`}
-                      >
-                        <div className="text-[11px] sm:text-xs font-extrabold text-emerald-300 truncate">
-                          {item.clientName}
-                        </div>
-                        <p className="text-[11px] sm:text-xs font-bold text-white line-clamp-2 mt-0.5 leading-snug">
-                          "{item.quote}"
-                        </p>
-                      </div>
                     </div>
+                  </div>
+
+                  {/* Clean Dedicated Footer Box Below Screenshot */}
+                  <div
+                    className={`p-4 bg-navy-900/95 border-t border-white/10 ${
+                      isRTL ? 'text-right' : 'text-left'
+                    }`}
+                  >
+                    <div className="text-xs font-extrabold text-emerald-400 truncate">
+                      {item.clientName}
+                    </div>
+                    <p className="text-xs font-semibold text-slate-200 line-clamp-2 mt-1 leading-relaxed">
+                      "{item.quote}"
+                    </p>
                   </div>
                 </TiltCard3D>
               ))}
