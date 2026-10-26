@@ -154,9 +154,9 @@ export const TiltCard3D: React.FC<TiltCard3DProps> = ({
     setTilt({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50, isHovered: false });
   };
 
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || intensity === 0) {
     return (
-      <div onClick={onClick} className={`relative ${className}`}>
+      <div onClick={onClick} className={`relative h-full ${className}`}>
         {children}
       </div>
     );

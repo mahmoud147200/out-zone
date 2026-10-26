@@ -649,11 +649,22 @@ export const ClientPortfolioStage: React.FC<ClientPortfolioStageProps> = ({
                             {isPlaying ? (
                               <>
                                 <video
+                                  key={video.id}
+                                  ref={(el) => {
+                                    if (el && el.dataset.started !== 'true') {
+                                      el.dataset.started = 'true';
+                                      el.play().catch(() => {
+                                        el.muted = true;
+                                        el.play().catch(() => {});
+                                      });
+                                    }
+                                  }}
                                   src={encodeAssetUrl(video.file)}
                                   poster={video.thumb}
                                   controls
                                   autoPlay
                                   playsInline
+                                  preload="auto"
                                   className="w-full h-full object-contain bg-black"
                                   onEnded={() => setPlayingVideoId(null)}
                                 />
@@ -822,11 +833,21 @@ export const ClientPortfolioStage: React.FC<ClientPortfolioStageProps> = ({
 
                 <video
                   key={activeCinemaVideo.file}
+                  ref={(el) => {
+                    if (el && el.dataset.started !== 'true') {
+                      el.dataset.started = 'true';
+                      el.play().catch(() => {
+                        el.muted = true;
+                        el.play().catch(() => {});
+                      });
+                    }
+                  }}
                   src={encodeAssetUrl(activeCinemaVideo.file)}
                   poster={activeCinemaVideo.thumb}
                   controls
                   autoPlay
                   playsInline
+                  preload="auto"
                   className="max-h-[74vh] max-w-full object-contain"
                 />
               </div>
