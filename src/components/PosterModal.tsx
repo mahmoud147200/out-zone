@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { X, Download, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ClientPoster, encodeAssetUrl } from '../data/content';
+import { useLanguage } from '../context/LanguageContext';
 
 interface PosterModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export const PosterModal: React.FC<PosterModalProps> = ({
   currentIndex = 0,
   onChangeIndex,
 }) => {
+  const { isRTL } = useLanguage();
   const [direction, setDirection] = useState<number>(0);
 
   const hasGallery = Boolean(posters && posters.length > 1 && onChangeIndex);
@@ -84,7 +86,9 @@ export const PosterModal: React.FC<PosterModalProps> = ({
           exit={{ opacity: 0, rotateX: -12, scale: 0.92, y: 20 }}
           transition={{ type: 'spring', stiffness: 140, damping: 20 }}
           style={{ transformStyle: 'preserve-3d' }}
-          className="relative max-w-5xl max-h-[95vh] w-full flex flex-col items-center justify-between bg-navy-900/95 border border-white/15 rounded-3xl p-3 sm:p-6 overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.85)] text-right"
+          className={`relative max-w-5xl max-h-[95vh] w-full flex flex-col items-center justify-between bg-navy-900/95 border border-white/15 rounded-3xl p-3 sm:p-6 overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.85)] ${
+            isRTL ? 'text-right' : 'text-left'
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Top Header */}
@@ -92,7 +96,7 @@ export const PosterModal: React.FC<PosterModalProps> = ({
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <span className="hidden sm:inline-flex items-center gap-1 text-xs text-brandOrange-400 bg-brandOrange-500/15 px-3 py-1 rounded-full border border-brandOrange-500/30 font-bold shrink-0">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>تصميم عالي الدقة HD</span>
+                <span>{isRTL ? 'عرض عالي الدقة HD' : 'Full HD Preview'}</span>
               </span>
               <h3 className="text-sm sm:text-lg font-extrabold text-white truncate">
                 {displayTitle}
@@ -111,15 +115,17 @@ export const PosterModal: React.FC<PosterModalProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 sm:px-3 sm:py-2 rounded-xl bg-white/5 hover:bg-brandOrange-500/20 border border-white/10 hover:border-brandOrange-500/40 text-slate-200 hover:text-white transition-all flex items-center gap-1.5 text-xs font-bold"
-                title="تحميل التصميم بجودة أصلية"
+                title={isRTL ? 'تحميل بجودة أصلية' : 'Download Original HD'}
               >
-                <Download className="w-4 h-4 sm:w-4 sm:h-4 text-brandOrange-400" />
-                <span className="hidden sm:inline">تحميل HD</span>
+                <Download className="w-4 h-4 text-brandOrange-400" />
+                <span className="hidden sm:inline">
+                  {isRTL ? 'تحميل HD' : 'Download HD'}
+                </span>
               </a>
               <button
                 onClick={onClose}
                 className="p-2 rounded-xl bg-white/10 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-slate-200 hover:text-white transition-colors"
-                title="إغلاق"
+                title={isRTL ? 'إغلاق' : 'Close'}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -136,14 +142,14 @@ export const PosterModal: React.FC<PosterModalProps> = ({
                 <button
                   onClick={handlePrev}
                   className="absolute right-2 sm:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-navy-900/90 hover:bg-brandOrange-500 text-white border border-white/20 hover:border-brandOrange-400 flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95"
-                  title="التصميم السابق"
+                  title={isRTL ? 'السابق' : 'Previous'}
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
                 <button
                   onClick={handleNext}
                   className="absolute left-2 sm:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-navy-900/90 hover:bg-brandOrange-500 text-white border border-white/20 hover:border-brandOrange-400 flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95"
-                  title="التصميم التالي"
+                  title={isRTL ? 'التالي' : 'Next'}
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
@@ -221,11 +227,19 @@ export const PosterModal: React.FC<PosterModalProps> = ({
 
           {/* Footer */}
           <div className="w-full pt-2.5 flex items-center justify-between text-[11px] sm:text-xs text-slate-400">
-            <span>OUT ZONE • معرض التصاميم الإبداعية</span>
+            <span>
+              {isRTL
+                ? 'OUT ZONE • معرض الأعمال والتقييمات'
+                : 'OUT ZONE • Creative Gallery'}
+            </span>
             <span>
               {hasGallery
-                ? 'استخدم الأسهم للتنقل ثلاثي الأبعاد بين البوسترات'
-                : 'اضغط في أي مكان خارج النافذة للإغلاق'}
+                ? isRTL
+                  ? 'استخدم الأسهم للتنقل ثلاثي الأبعاد'
+                  : 'Use arrows for 3D navigation'
+                : isRTL
+                ? 'اضغط في أي مكان خارج النافذة للإغلاق'
+                : 'Click outside to close'}
             </span>
           </div>
         </motion.div>

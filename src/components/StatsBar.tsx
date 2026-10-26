@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Users, Rocket, BarChart3, ShieldCheck } from 'lucide-react';
 import { TiltCard3D } from './ScrollReveal3D';
+import { useLanguage } from '../context/LanguageContext';
 
 export const StatsBar: React.FC = () => {
+  const { isRTL } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -29,8 +31,8 @@ export const StatsBar: React.FC = () => {
       target: 120,
       prefix: '+',
       suffix: '',
-      title: 'عميل وعلامة تجارية',
-      subtitle: 'شراكات نجاح مستمرة',
+      title: isRTL ? 'عميل وبراند يثقون فينا' : 'Brands & Clients',
+      subtitle: isRTL ? 'شراكة نجاح مستمرة بالكويت' : 'Long-term success partnerships',
       icon: Users,
       color: 'from-brandOrange-500 to-amber-500',
       borderGlow: 'hover:border-brandOrange-500/50',
@@ -40,8 +42,8 @@ export const StatsBar: React.FC = () => {
       target: 350,
       prefix: '+',
       suffix: '',
-      title: 'حملة تسويقية',
-      subtitle: 'على Meta وتيك توك وجوجل',
+      title: isRTL ? 'حملة تسويقية ناجحة' : 'Successful Campaigns',
+      subtitle: isRTL ? 'على Meta وتيك توك وجوجل' : 'Across Meta, TikTok & Google',
       icon: Rocket,
       color: 'from-amber-500 to-electric-400',
       borderGlow: 'hover:border-amber-500/50',
@@ -52,8 +54,8 @@ export const StatsBar: React.FC = () => {
       prefix: '+',
       suffix: 'M',
       isDecimal: true,
-      title: 'وصول شهري',
-      subtitle: 'مشاهدات وتفاعل حقيقي',
+      title: isRTL ? 'وصول شهري للجمهور' : 'Monthly Audience Reach',
+      subtitle: isRTL ? 'مشاهدات وتفاعل صجي' : 'Targeted views & real engagement',
       icon: BarChart3,
       color: 'from-electric-400 to-blue-500',
       borderGlow: 'hover:border-electric-500/50',
@@ -63,8 +65,8 @@ export const StatsBar: React.FC = () => {
       target: 85,
       prefix: '+',
       suffix: '%',
-      title: 'نسبة رضا العملاء',
-      subtitle: 'نمو مستدام وتجديد عقود',
+      title: isRTL ? 'نسبة رضا عملائنا' : 'Client Satisfaction Rate',
+      subtitle: isRTL ? 'نمو مستمر وتجديد عقود' : 'Sustained growth & renewals',
       icon: ShieldCheck,
       color: 'from-blue-500 to-brandOrange-500',
       borderGlow: 'hover:border-blue-500/50',
@@ -72,7 +74,11 @@ export const StatsBar: React.FC = () => {
   ];
 
   return (
-    <section id="stats" ref={barRef} className="relative py-10 sm:py-12 bg-navy-900/60 border-y border-white/5 backdrop-blur-md w-full overflow-hidden">
+    <section
+      id="stats"
+      ref={barRef}
+      className="relative py-10 sm:py-12 bg-navy-900/60 border-y border-white/5 backdrop-blur-md w-full overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {statsList.map((stat, idx) => (
@@ -111,7 +117,7 @@ const StatCard: React.FC<StatCardProps> = ({ stat, isVisible, delay }) => {
     if (!isVisible) return;
 
     const timeout = setTimeout(() => {
-      let start = 0;
+      const start = 0;
       const end = stat.target;
       const duration = 1800;
       const frameRate = 1000 / 60;
@@ -161,7 +167,6 @@ const StatCard: React.FC<StatCardProps> = ({ stat, isVisible, delay }) => {
       <div className="text-xs sm:text-base font-bold text-slate-200 mb-0.5 truncate">{stat.title}</div>
       <div className="text-[10px] sm:text-xs text-slate-400 truncate">{stat.subtitle}</div>
 
-      {/* Subtle bottom edge glow on hover */}
       <div
         className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
       />

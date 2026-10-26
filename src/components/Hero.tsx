@@ -1,13 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeft, Star, Sparkles, CheckCircle2, Layers, TrendingUp, Award } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Star, Sparkles, CheckCircle2, Layers, TrendingUp, Award, Globe } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { SITE_DATA } from '../data/content';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeroProps {
   onOpenConsultation: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
+  const { isRTL } = useLanguage();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -22,6 +24,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
   const handleMouseLeave = () => {
     setMousePos({ x: 0, y: 0 });
   };
+
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (
     <section
@@ -40,45 +44,63 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          
-          {/* Main Content (Right in RTL layout) */}
-          <div className="lg:col-span-7 flex flex-col items-start text-right w-full">
-            
+          {/* Main Content */}
+          <div
+            className={`lg:col-span-7 flex flex-col items-start ${
+              isRTL ? 'text-right' : 'text-left'
+            } w-full`}
+          >
             {/* Eyebrow badge */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-navy-900/90 border border-brandOrange-500/35 text-brandOrange-400 text-xs sm:text-sm font-bold mb-6 shadow-[0_0_20px_rgba(249,115,22,0.15)]">
               <span className="w-2 h-2 rounded-full bg-brandOrange-500 animate-ping" />
               <Sparkles className="w-4 h-4 text-brandOrange-400 shrink-0" />
-              <span>وكالة تسويق رقمي وصناعة محتوى متكاملة</span>
+              <span>
+                {isRTL
+                  ? 'وكالة تسويق رقمي، صناعة محتوى، وتصميم مواقع احترافية بالكويت'
+                  : 'Full-Service Digital Marketing, Content & Web Agency in Kuwait'}
+              </span>
             </div>
 
-            {/* Harmonious, Balanced Arabic Headline — Zero Clipped Dots */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] xl:text-[56px] font-black text-white tracking-normal leading-[1.45] mb-6 w-full">
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[50px] xl:text-[56px] font-black text-white tracking-normal leading-[1.4] mb-6 w-full">
               <span className="block py-1">
-                نحوّل حضورك الرقمي
+                {isRTL ? 'نحوّل حضورك الرقمي' : 'We Turn Your Digital Presence'}
               </span>
               <span className="block py-1.5 mt-1 bg-gradient-to-l from-brandOrange-500 via-brandOrange-400 to-amber-300 bg-clip-text text-transparent">
-                إلى نُمو حقيقي ومبيعات مستدامة
+                {isRTL
+                  ? 'حق نمو صجي ومبيعات ما توقف'
+                  : 'Into Real Growth & Non-Stop Sales'}
               </span>
             </h1>
 
-            {/* Well-spaced supporting paragraph */}
+            {/* Supporting paragraph */}
             <p className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-2xl leading-[1.9] mb-8 font-normal">
-              نبتكر حلولاً تسويقية متكاملة تساعد علامتك التجارية على الوصول لجمهورك الأنسب، وبناء هوية بصرية قوية تضاعف مبيعاتك وتحقق لك نتائج حقيقية وملموسة.
+              {isRTL
+                ? 'نبتكر لك حلول تسويقية متكاملة، ونصمم لك مواقع إلكترونية احترافية مع إيميل بزنس رسمي باسم شركتك، ومحتوى إبداعي يخلّي براندك يوصل حق جمهورك الصح بالكويت ويضاعف مبيعاتك.'
+                : 'We craft end-to-end marketing strategies, build high-converting websites with an official business email on your domain, and produce creative content that scales your brand and multiplies your revenue.'}
             </p>
 
             {/* Quick Feature Pills */}
-            <div className="flex flex-wrap items-center gap-3 mb-8">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-8">
               <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-slate-200 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-brandOrange-400 shrink-0" />
-                <span>إدارة احترافية للحسابات</span>
+                <span>{isRTL ? 'إدارة احترافية لحساباتك' : 'Pro Social Media Management'}</span>
               </div>
               <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-slate-200 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-electric-400 shrink-0" />
-                <span>تصوير ومونتاج ريلز إبداعي</span>
+                <span>{isRTL ? 'مونتاج ريلز يشد الانتباه' : 'High-Impact Reels Editing'}</span>
+              </div>
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-brandOrange-500/10 border border-brandOrange-500/35 text-xs sm:text-sm text-amber-200 font-bold">
+                <Globe className="w-4 h-4 text-brandOrange-400 shrink-0" />
+                <span>
+                  {isRTL
+                    ? 'إنشاء مواقع + إيميل بزنس رسمي'
+                    : 'Websites + Official Business Email'}
+                </span>
               </div>
               <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-slate-200 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>حملات إعلانية عالية العائد</span>
+                <span>{isRTL ? 'إعلانات ممولة بعائد قوي' : 'High-ROAS Paid Ads'}</span>
               </div>
             </div>
 
@@ -88,25 +110,28 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
                 href="#packages"
                 className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-sm sm:text-base font-extrabold text-white bg-gradient-to-r from-brandOrange-600 via-brandOrange-500 to-amber-500 hover:from-brandOrange-500 hover:to-brandOrange-600 shadow-[0_0_28px_rgba(249,115,22,0.45)] hover:shadow-[0_0_38px_rgba(249,115,22,0.7)] transition-all duration-300 hover:scale-[1.02] group"
               >
-                <span>استكشف الباقات</span>
-                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
+                <span>{isRTL ? 'شوف باقاتنا وأسعارنا' : 'Explore Packages & Pricing'}</span>
+                <ArrowIcon className="w-4 h-4 sm:w-5 sm:h-5 transition-transform" />
               </a>
 
               <a
-                href={`https://wa.me/${SITE_DATA.whatsappKuwait}?text=${encodeURIComponent('مرحباً فريق OUT ZONE 👋، أود الاستفسار عن خدماتكم وباقات التسويق الرقمي.')}`}
+                href={`https://wa.me/${SITE_DATA.whatsappKuwait}?text=${encodeURIComponent(
+                  isRTL
+                    ? 'قوة فريق OUT ZONE 👋، حاب أستفسر عن خدماتكم وباقات التسويق الرقمي وتصميم المواقع.'
+                    : 'Hello OUT ZONE team 👋, I would like to inquire about your digital marketing packages and website services.'
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => onOpenConsultation()}
                 className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-2xl text-sm sm:text-base font-bold text-white bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 hover:border-emerald-400 transition-all duration-300 shadow-lg hover:scale-[1.02]"
               >
                 <WhatsAppIcon className="w-5 h-5 text-emerald-400" />
-                <span>تواصل عبر واتساب</span>
+                <span>{isRTL ? 'تواصل ويانا واتساب' : 'Chat on WhatsApp'}</span>
               </a>
             </div>
 
             {/* Social Proof & Trust Badges */}
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-5 border-t border-white/10 w-full">
-              {/* Client Logos Social Proof */}
               <div className="flex items-center">
                 <div className="flex -space-x-2 space-x-reverse overflow-hidden">
                   <img
@@ -140,23 +165,24 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
                 </div>
               </div>
 
-              {/* Stars & Text */}
               <div>
                 <div className="flex items-center gap-1 mb-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
-                  <span className="text-xs font-bold text-amber-300 mr-1.5">5.0 / 5.0</span>
+                  <span className="text-xs font-bold text-amber-300 mx-1.5">5.0 / 5.0</span>
                 </div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-300">
-                  <span className="text-white font-bold">+120 شركة وعلامة تجارية</span> تثق بنا
+                  <span className="text-white font-bold">
+                    {isRTL ? '+120 شركة وبراند بالكويت والخليج' : '+120 Brands in Kuwait & GCC'}
+                  </span>{' '}
+                  {isRTL ? 'يثقون فينا' : 'Trust Us'}
                 </p>
               </div>
             </div>
-
           </div>
 
-          {/* Left Visual 3D Studio Composition — Clean, Zero Clutter, Zero ROAS text */}
+          {/* 3D Studio Composition */}
           <div className="lg:col-span-5 relative flex justify-center items-center w-full">
             <div
               className="relative w-full max-w-[460px] transition-transform duration-500 ease-out"
@@ -170,8 +196,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
 
               {/* Main 3D Glass Showcase Card */}
               <div className="relative rounded-[32px] overflow-hidden p-6 sm:p-8 bg-gradient-to-b from-navy-850/95 via-navy-900/95 to-navy-950/95 border border-white/15 shadow-[0_25px_60px_rgba(0,0,0,0.7)] backdrop-blur-2xl">
-                
-                {/* Decorative Top Window Dots */}
                 <div className="flex items-center justify-between pb-5 mb-6 border-b border-white/10">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-brandOrange-500/80" />
@@ -202,31 +226,41 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation }) => {
                     <div className="w-9 h-9 rounded-xl bg-brandOrange-500/15 text-brandOrange-400 flex items-center justify-center mx-auto mb-2">
                       <Layers className="w-5 h-5" />
                     </div>
-                    <div className="text-xs font-extrabold text-white">هوية ومحتوى</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">تصاميم احترافية</div>
+                    <div className="text-xs font-extrabold text-white">
+                      {isRTL ? 'هوية ومحتوى' : 'Brand & Content'}
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">
+                      {isRTL ? 'تصاميم تفتح النفس' : 'Pro Creatives'}
+                    </div>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-electric-500/40 transition-colors">
                     <div className="w-9 h-9 rounded-xl bg-electric-500/15 text-electric-400 flex items-center justify-center mx-auto mb-2">
                       <TrendingUp className="w-5 h-5" />
                     </div>
-                    <div className="text-xs font-extrabold text-white">نمو متسارع</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">خطط مدروسة</div>
+                    <div className="text-xs font-extrabold text-white">
+                      {isRTL ? 'مواقع وإيميل' : 'Web & Email'}
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">
+                      {isRTL ? 'إيميل بزنس رسمي' : 'Official Domain'}
+                    </div>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-amber-500/40 transition-colors">
                     <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center mx-auto mb-2">
                       <Award className="w-5 h-5" />
                     </div>
-                    <div className="text-xs font-extrabold text-white">نتائج مضمونة</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">تقارير دورية</div>
+                    <div className="text-xs font-extrabold text-white">
+                      {isRTL ? 'نتايج مضمونة' : 'Real Results'}
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5">
+                      {isRTL ? 'تقارير بالأرقام' : 'Monthly ROI'}
+                    </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>

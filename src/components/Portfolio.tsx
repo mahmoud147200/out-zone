@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  CLIENTS,
+  getClients,
   ClientItem,
   ClientPoster,
 } from '../data/content';
@@ -10,11 +10,13 @@ import {
   Film,
   Sparkles,
   ArrowUpLeft,
+  ArrowUpRight,
   Eye,
 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { Reveal3D, TiltCard3D } from './ScrollReveal3D';
 import { ClientPortfolioStage } from './ClientShowcaseModal';
+import { useLanguage } from '../context/LanguageContext';
 
 interface PortfolioProps {
   activeClient: ClientItem;
@@ -29,28 +31,44 @@ export const Portfolio: React.FC<PortfolioProps> = ({
   onOpenPosterLightbox,
   onOpenConsultation,
 }) => {
+  const { lang, isRTL } = useLanguage();
+  const clientsList = getClients(lang);
   const [activeSector, setActiveSector] = useState<string>('all');
 
-  const sectors = [
-    { label: 'كل العملاء', slug: 'all' },
-    { label: 'مطاعم وكافيهات', slug: 'restaurants' },
-    { label: 'عطور وتجميل', slug: 'cosmetics' },
-    { label: 'عيادات ومراكز طبية', slug: 'clinics' },
-    { label: 'أنظمة وتقنية ذكية', slug: 'tech' },
-    { label: 'صناعة وتدريب', slug: 'other' },
-  ];
+  const localizedActiveClient =
+    clientsList.find((c) => c.id === activeClient.id) || clientsList[0];
+
+  const sectors = isRTL
+    ? [
+        { label: 'كل عملائنا', slug: 'all' },
+        { label: 'مطاعم وكافيهات', slug: 'restaurants' },
+        { label: 'عطور وتجميل', slug: 'cosmetics' },
+        { label: 'عيادات ومراكز طبية', slug: 'clinics' },
+        { label: 'أنظمة وتقنية ذكية', slug: 'tech' },
+        { label: 'صناعة وتدريب', slug: 'other' },
+      ]
+    : [
+        { label: 'All Clients', slug: 'all' },
+        { label: 'Restaurants & Cafes', slug: 'restaurants' },
+        { label: 'Perfumes & Beauty', slug: 'cosmetics' },
+        { label: 'Medical & Clinics', slug: 'clinics' },
+        { label: 'Smart Tech & POS', slug: 'tech' },
+        { label: 'Industry & Coaching', slug: 'other' },
+      ];
 
   const filteredClients =
     activeSector === 'all'
-      ? CLIENTS
+      ? clientsList
       : activeSector === 'other'
-      ? CLIENTS.filter(
+      ? clientsList.filter(
           (c) => c.categorySlug === 'industry' || c.categorySlug === 'coaching'
         )
-      : CLIENTS.filter((c) => c.categorySlug === activeSector);
+      : clientsList.filter((c) => c.categorySlug === activeSector);
 
-  const totalPosters = CLIENTS.reduce((acc, c) => acc + c.posters.length, 0);
-  const totalVideos = CLIENTS.reduce((acc, c) => acc + c.videos.length, 0);
+  const totalPosters = clientsList.reduce((acc, c) => acc + c.posters.length, 0);
+  const totalVideos = clientsList.reduce((acc, c) => acc + c.videos.length, 0);
+
+  const ArrowIcon = isRTL ? ArrowUpLeft : ArrowUpRight;
 
   return (
     <section
@@ -66,18 +84,24 @@ export const Portfolio: React.FC<PortfolioProps> = ({
         <Reveal3D direction="up" className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy-900 border border-brandOrange-500/35 text-xs font-bold text-brandOrange-400 mb-4 shadow-[0_0_16px_rgba(249,115,22,0.18)]">
             <Briefcase className="w-4 h-4 text-brandOrange-400" />
-            <span>معرض أعمالنا مع شركاء النجاح • +{totalPosters} تصميم و +{totalVideos} فيديو</span>
+            <span>
+              {isRTL
+                ? `شغلنا مع شركاء النجاح • +${totalPosters} تصميم و +${totalVideos} فيديو`
+                : `Our Client Portfolio • +${totalPosters} Designs & +${totalVideos} Videos`}
+            </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-            اضغط على شعار أي عميل{' '}
+            {isRTL ? 'اضغط على لوجو أي عميل ' : 'Click Any Client Logo to '}
             <span className="bg-gradient-to-l from-brandOrange-400 via-amber-300 to-electric-400 bg-clip-text text-transparent">
-              واستكشف أعمالنا معه
+              {isRTL ? 'وشوف شغلنا معاه بالكامل' : 'Explore Our Full Work Together'}
             </span>
           </h2>
 
           <p className="text-sm sm:text-base lg:text-lg text-slate-300 mt-4 leading-relaxed">
-            عند الضغط على لوجو أي عميل يظهر لك الكرت التعريفي الخاص بمجال البزنس، وكافة البوسترات الإعلانية والفيديوهات التي صممناها وأنتجناها له بعرض ثلاثي الأبعاد أنيق.
+            {isRTL
+              ? 'لما تضغط على لوجو أي عميل يظهر لك الكرت التعريفي بمجال البزنس، وكل البوسترات الإعلانية والفيديوهات اللي صممناها وأنتجناها له بعرض 3D أنيق.'
+              : 'Clicking any client logo reveals a 3D business profile card along with all promotional posters and Reels videos we crafted for them.'}
           </p>
 
           {/* Sector Filter Pills */}
@@ -105,7 +129,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({
         >
           <AnimatePresence mode="popLayout">
             {filteredClients.map((client, idx) => {
-              const isSelected = activeClient.id === client.id;
+              const isSelected = localizedActiveClient.id === client.id;
               return (
                 <TiltCard3D
                   key={client.id}
@@ -139,7 +163,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({
                   </div>
 
                   {/* Client Name & Counters */}
-                  <div className="mt-3 text-right">
+                  <div className={`mt-3 ${isRTL ? 'text-right' : 'text-left'}`}>
                     <h3 className="text-sm sm:text-lg font-black text-white group-hover:text-brandOrange-400 transition-colors truncate">
                       {client.arabicName}
                     </h3>
@@ -151,18 +175,22 @@ export const Portfolio: React.FC<PortfolioProps> = ({
                     <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mt-3 pt-3 border-t border-white/10">
                       <div className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-white/[0.04] border border-white/5 text-[10px] sm:text-xs font-bold text-slate-200">
                         <ImageIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brandOrange-400 shrink-0" />
-                        <span>{client.posters.length} بوستر</span>
+                        <span>
+                          {client.posters.length} {isRTL ? 'بوستر' : 'Posters'}
+                        </span>
                       </div>
                       <div className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-white/[0.04] border border-white/5 text-[10px] sm:text-xs font-bold text-slate-200">
                         <Film className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-electric-400 shrink-0" />
-                        <span>{client.videos.length} فيديو</span>
+                        <span>
+                          {client.videos.length} {isRTL ? 'فيديو' : 'Videos'}
+                        </span>
                       </div>
                     </div>
 
                     {/* Click Prompt */}
                     <div className="mt-3 flex items-center justify-between text-[10px] sm:text-xs font-extrabold text-brandOrange-400 group-hover:text-amber-300">
-                      <span>عرض الكرت والأعمال</span>
-                      <ArrowUpLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
+                      <span>{isRTL ? 'عرض الكرت والأعمال' : 'View Profile & Works'}</span>
+                      <ArrowIcon className="w-3.5 h-3.5 transition-transform" />
                     </div>
                   </div>
                 </TiltCard3D>
@@ -171,7 +199,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({
           </AnimatePresence>
         </div>
 
-        {/* Inline 3D Client Portfolio Stage (الكرت التعريفي + البوسترات + الفيديوهات) */}
+        {/* Inline 3D Client Portfolio Stage */}
         <div
           id="client-works-stage"
           className="pt-8 sm:pt-10 border-t border-white/10"
@@ -179,21 +207,25 @@ export const Portfolio: React.FC<PortfolioProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
             <div className="flex items-center gap-2.5">
               <span className="w-3 h-3 rounded-full bg-brandOrange-500 animate-ping" />
-              <h3 className="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
+              <h3 className="text-lg sm:text-2xl font-black text-white flex items-center gap-2 flex-wrap">
                 <Sparkles className="w-5 h-5 text-brandOrange-400" />
-                <span>استعراض مباشر لأعمال العميل المختار:</span>
-                <span className="text-brandOrange-400">{activeClient.arabicName}</span>
+                <span>
+                  {isRTL
+                    ? 'استعراض مباشر لأعمال العميل المختار:'
+                    : 'Live Portfolio Showcase for:'}
+                </span>
+                <span className="text-brandOrange-400">{localizedActiveClient.arabicName}</span>
               </h3>
             </div>
           </div>
 
           <ClientPortfolioStage
-            client={activeClient}
+            client={localizedActiveClient}
             onSelectClient={(c) => onSelectClient(c, false)}
             onOpenPosterLightbox={onOpenPosterLightbox}
             onOpenConsultation={onOpenConsultation}
             isModal={false}
-            onOpenFullModal={() => onSelectClient(activeClient, true)}
+            onOpenFullModal={() => onSelectClient(localizedActiveClient, true)}
           />
         </div>
       </div>

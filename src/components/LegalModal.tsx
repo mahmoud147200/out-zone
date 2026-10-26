@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X, ShieldCheck } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface LegalModalProps {
   isOpen: boolean;
@@ -14,6 +15,8 @@ export const LegalModal: React.FC<LegalModalProps> = ({
   title,
   type,
 }) => {
+  const { isRTL } = useLanguage();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -33,12 +36,16 @@ export const LegalModal: React.FC<LegalModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-xl rounded-3xl bg-navy-900 border border-white/10 p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto text-right"
+        className={`relative w-full max-w-xl rounded-3xl bg-navy-900 border border-white/10 p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto ${
+          isRTL ? 'text-right' : 'text-left'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-5 left-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+          className={`absolute top-5 ${
+            isRTL ? 'left-5' : 'right-5'
+          } p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors`}
         >
           <X className="w-5 h-5" />
         </button>
@@ -50,39 +57,77 @@ export const LegalModal: React.FC<LegalModalProps> = ({
 
         <div className="space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-white/10 pt-4">
           {type === 'privacy' ? (
+            isRTL ? (
+              <>
+                <p>
+                  في وكالة <strong>OUT ZONE</strong>، نلتزم بحماية خصوصية عملائنا وزوارنا وفق أعلى المعايير المهنية والأخلاقية.
+                </p>
+                <h4 className="font-bold text-white text-sm">1. جمع البيانات</h4>
+                <p>
+                  نجمع فقط البيانات اللي تزودنا فيها بنفسك عبر التواصل المباشر مثل الاسم ورقم الهاتف واسم المشروع بهدف تقديم الاستشارة والحلول التسويقية وتصميم المواقع.
+                </p>
+                <h4 className="font-bold text-white text-sm">2. سرية المعلومات</h4>
+                <p>
+                  كل بيانات حسابات التواصل الاجتماعي، المواقع الإلكترونية، الإيميلات الرسمية، وحملاتك الإعلانية تُعامل بسرية تامة.
+                </p>
+                <h4 className="font-bold text-white text-sm">3. عدم مشاركة البيانات</h4>
+                <p>
+                  ما نبيع أو نشارك أي من بيانات عملائنا مع أي طرف ثالث لأي غرض كان.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  At <strong>OUT ZONE</strong>, we are committed to protecting the privacy and data confidentiality of our clients and visitors.
+                </p>
+                <h4 className="font-bold text-white text-sm">1. Data Collection</h4>
+                <p>
+                  We only collect information you voluntarily provide when contacting us (such as name, phone number, and business details) to deliver tailored marketing and web solutions.
+                </p>
+                <h4 className="font-bold text-white text-sm">2. Confidentiality</h4>
+                <p>
+                  All social media credentials, website assets, official business emails, and ad campaign metrics are treated with strict confidentiality under mutual NDA standards.
+                </p>
+                <h4 className="font-bold text-white text-sm">3. Zero Third-Party Sharing</h4>
+                <p>
+                  We never sell, rent, or share client information with third parties.
+                </p>
+              </>
+            )
+          ) : isRTL ? (
             <>
               <p>
-                في وكالة <strong>OUT ZONE</strong>، نلتزم بحماية خصوصية عملائنا وزوارنا وفق أعلى المعايير القانونية والأخلاقية.
+                حياكم الله في <strong>OUT ZONE</strong>. يوضح هذا القسم التزامات تقديم خدمات التسويق الرقمي وتطوير المواقع لعملائنا الكرام.
               </p>
-              <h4 className="font-bold text-white text-sm">1. جمع البيانات</h4>
+              <h4 className="font-bold text-white text-sm">1. نطاق العمل</h4>
               <p>
-                نقوم بجمع البيانات التي تزودنا بها طواعية عبر نماذج الاستشارة مثل الاسم ورقم الهاتف واسم النشاط التجاري لغرض التواصل وتقديم الحلول التسويقية المطلوبة.
+                تلتزم الوكالة بتسليم كافة المواد المتفق عليها ضمن الباقة أو خدمة تصميم الموقع الإلكتروني مع الإيميل الرسمي وفق الجدول الزمني المحدد.
               </p>
-              <h4 className="font-bold text-white text-sm">2. سرية المعلومات</h4>
+              <h4 className="font-bold text-white text-sm">2. ميزانيات الإعلانات الممولة</h4>
               <p>
-                جميع بيانات حسابات التواصل الاجتماعي، مؤشرات الأداء، وحملاتك الإعلانية تُعامل بسرية تامة وتخضع لاتفاقية عدم إفصاح متبادلة (NDA) عند التعاقد.
+                قيمة الباقات الشهرية تشمل الإدارة الكاملة، صناعة المحتوى، التصميم، والمونتاج، بينما يتم تحديد ميزانية الإنفاق الإعلاني للمنصات (Meta, TikTok, Google) حسب رغبة العميل.
               </p>
-              <h4 className="font-bold text-white text-sm">3. عدم مشاركة البيانات</h4>
+              <h4 className="font-bold text-white text-sm">3. الملكية الفكرية</h4>
               <p>
-                لا نقوم ببيع أو تأجير أو مشاركة أي من بيانات عملائنا مع أي طرف ثالث لأغراض تسويقية خارجية.
+                تنتقل ملكية كافة التصاميم، الفيديوهات، والمواقع الإلكترونية والدومين الرسمي للعميل فور إتمام الاتفاق.
               </p>
             </>
           ) : (
             <>
               <p>
-                أهلاً بكم في <strong>OUT ZONE</strong>. يحدد هذا العقد التزامات تقديم الخدمات التسويقية الرقمية لعملائنا الكرام.
+                Welcome to <strong>OUT ZONE</strong>. These terms outline our commitment in delivering digital marketing and website development services.
               </p>
-              <h4 className="font-bold text-white text-sm">1. نطاق العمل</h4>
+              <h4 className="font-bold text-white text-sm">1. Scope of Work</h4>
               <p>
-                تلتزم الوكالة بتسليم المواد المتفق عليها ضمن الباقة المختارة (بوستات، ستوري، ريلز، حملات إعلانية) وفق جدول زمني متفق عليه مسبقاً.
+                The agency delivers all agreed-upon monthly deliverables (posts, stories, Reels, ad management) or custom website + official business email projects according to the scheduled timeline.
               </p>
-              <h4 className="font-bold text-white text-sm">2. ميزانيات الإعلانات</h4>
+              <h4 className="font-bold text-white text-sm">2. Ad Spend Budgets</h4>
               <p>
-                تكلفة الباقات الشهرية تغطي إدارة الحملات والاستراتيجية وصناعة المحتوى، بينما يتم سداد ميزانية الإنفاق الإعلاني للمنصات (Meta, TikTok, Google) مباشرة عبر بطاقة العميل.
+                Monthly package fees cover strategy, content creation, design, editing, and campaign management, while platform ad spend (Meta, TikTok, Google) is allocated directly according to the client’s budget.
               </p>
-              <h4 className="font-bold text-white text-sm">3. الملكية الفكرية</h4>
+              <h4 className="font-bold text-white text-sm">3. Intellectual Property</h4>
               <p>
-                تؤول ملكية كافة التصاميم والمواد الإعلانية المعتمدة والمنتجة للعميل بمجرد سداد المستحقات المتفق عليها.
+                Full ownership of all approved designs, videos, websites, and domain emails transfers to the client upon completion of payment.
               </p>
             </>
           )}
@@ -93,7 +138,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
             onClick={onClose}
             className="px-6 py-2.5 rounded-xl bg-navy-800 hover:bg-navy-700 text-xs font-bold text-slate-200 hover:text-white transition-colors"
           >
-            فهمت وموافق
+            {isRTL ? 'واضح وموافق' : 'Understood'}
           </button>
         </div>
       </div>

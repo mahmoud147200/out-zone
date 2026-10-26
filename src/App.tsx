@@ -6,6 +6,7 @@ import { ClientLogos } from './components/ClientLogos';
 import { Services } from './components/Services';
 import { Packages } from './components/Packages';
 import { Portfolio } from './components/Portfolio';
+import { ClientFeedback } from './components/ClientFeedback';
 import { CaseStudies } from './components/CaseStudies';
 import { WhyUs } from './components/WhyUs';
 import { KuwaitCTA } from './components/KuwaitCTA';
@@ -16,6 +17,7 @@ import { ClientShowcaseModal } from './components/ClientShowcaseModal';
 import { LegalModal } from './components/LegalModal';
 import { ScrollProgress3D } from './components/ScrollReveal3D';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import {
   CLIENTS,
   ClientItem,
@@ -24,7 +26,8 @@ import {
   openWhatsAppDirect,
 } from './data/content';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { lang, isRTL } = useLanguage();
   const [activeClient, setActiveClient] = useState<ClientItem>(CLIENTS[0]);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
 
@@ -54,7 +57,7 @@ export const App: React.FC = () => {
 
   // Direct WhatsApp handler — opens WhatsApp directly on +201067989456
   const handleOpenConsultation = (topicOrPackage?: string) => {
-    openWhatsAppDirect(topicOrPackage);
+    openWhatsAppDirect(topicOrPackage, lang);
   };
 
   // Single poster viewer (used by Services, Packages, WhyUs)
@@ -68,7 +71,7 @@ export const App: React.FC = () => {
     });
   };
 
-  // Multi-poster 3D gallery viewer (used by Client Portfolio)
+  // Multi-poster 3D gallery viewer (used by Client Portfolio & Client Feedback)
   const handleOpenClientPosterLightbox = (
     posters: ClientPoster[],
     index: number
@@ -96,7 +99,7 @@ export const App: React.FC = () => {
       {/* Top 3D Scroll Progress & Parallax Ambient Shapes */}
       <ScrollProgress3D />
 
-      {/* Navbar */}
+      {/* Navbar with Kuwaiti / English Language Switcher */}
       <Navbar onOpenConsultation={handleOpenConsultation} />
 
       {/* Main Page Flow */}
@@ -112,7 +115,7 @@ export const App: React.FC = () => {
           onSelectClient={(client) => handleSelectClient(client, true)}
         />
 
-        {/* 4. Integrated Marketing Services */}
+        {/* 4. Integrated Marketing & Website Services */}
         <Services
           onOpenConsultation={handleOpenConsultation}
           onOpenPosterModal={handleOpenPosterModal}
@@ -132,19 +135,25 @@ export const App: React.FC = () => {
           onOpenConsultation={handleOpenConsultation}
         />
 
-        {/* 7. Case Studies */}
+        {/* 7. Client Feedback & Verified WhatsApp Reviews (آراء العملاء) */}
+        <ClientFeedback
+          onOpenPosterLightbox={handleOpenClientPosterLightbox}
+          onOpenConsultation={handleOpenConsultation}
+        />
+
+        {/* 8. Case Studies */}
         <CaseStudies onOpenConsultation={handleOpenConsultation} />
 
-        {/* 8. Why OUT ZONE / About Us */}
+        {/* 9. Why OUT ZONE / About Us */}
         <WhyUs
           onOpenPosterModal={handleOpenPosterModal}
           onOpenConsultation={() => handleOpenConsultation()}
         />
 
-        {/* 9. Digital Growth CTA */}
+        {/* 10. Digital Growth CTA */}
         <KuwaitCTA onOpenConsultation={() => handleOpenConsultation()} />
 
-        {/* 10. Direct WhatsApp & Contact Channels */}
+        {/* 11. Direct WhatsApp & Contact Channels */}
         <ContactSection />
       </main>
 
@@ -153,14 +162,18 @@ export const App: React.FC = () => {
         onOpenPrivacy={() =>
           setLegalModalState({
             isOpen: true,
-            title: 'سياسة الخصوصية وسرية البيانات',
+            title: isRTL
+              ? 'سياسة الخصوصية وسرية البيانات'
+              : 'Privacy Policy & Data Confidentiality',
             type: 'privacy',
           })
         }
         onOpenTerms={() =>
           setLegalModalState({
             isOpen: true,
-            title: 'الشروط والأحكام والتعاقد',
+            title: isRTL
+              ? 'الشروط والأحكام والتعاقد'
+              : 'Terms & Conditions of Service',
             type: 'terms',
           })
         }
@@ -168,7 +181,11 @@ export const App: React.FC = () => {
 
       {/* Floating Official WhatsApp Action Button */}
       <a
-        href={`https://wa.me/${SITE_DATA.whatsappKuwait}?text=${encodeURIComponent('مرحباً فريق OUT ZONE 👋، أود الاستفسار عن باقات وخدمات التسويق الرقمي.')}`}
+        href={`https://wa.me/${SITE_DATA.whatsappKuwait}?text=${encodeURIComponent(
+          isRTL
+            ? 'قوة فريق OUT ZONE 👋، حاب أستفسر عن باقات وخدمات التسويق الرقمي وتصميم المواقع.'
+            : 'Hello OUT ZONE team 👋, I would like to inquire about your digital marketing packages and website services.'
+        )}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Direct WhatsApp"
@@ -176,7 +193,7 @@ export const App: React.FC = () => {
       >
         <WhatsAppIcon className="w-6 h-6 sm:w-7 sm:h-7 text-white shrink-0" />
         <span className="hidden sm:inline-block text-xs sm:text-sm font-extrabold">
-          واتساب مباشر
+          {isRTL ? 'واتساب مباشر' : 'WhatsApp Us'}
         </span>
       </a>
 
@@ -190,7 +207,7 @@ export const App: React.FC = () => {
         onOpenConsultation={handleOpenConsultation}
       />
 
-      {/* 3D Poster Lightbox Modal */}
+      {/* 3D Poster & Feedback Lightbox Modal */}
       <PosterModal
         isOpen={posterModalState.isOpen}
         onClose={() =>
@@ -217,5 +234,11 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+export const App: React.FC = () => (
+  <LanguageProvider>
+    <AppContent />
+  </LanguageProvider>
+);
 
 export default App;

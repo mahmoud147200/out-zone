@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+>
   <url>
     <loc>https://outzone-kw.com/</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-10-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar-KW" href="https://outzone-kw.com/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://outzone-kw.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://outzone-kw.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://outzone-kw.com/" />
+    <image:image>
+      <image:loc>https://outzone-kw.com/assets/logo/logo-outzone.png</image:loc>
+      <image:title>OUT ZONE Digital Marketing &amp; Web Development Agency in Kuwait</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://outzone-kw.com/assets/services/services-poster.png</image:loc>
+      <image:title>OUT ZONE Integrated Marketing &amp; Website Development Services</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://outzone-kw.com/assets/packages/packages-all.png</image:loc>
+      <image:title>OUT ZONE Monthly Marketing Packages in KWD</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://outzone-kw.com/assets/about/about-poster.png</image:loc>
+      <image:title>OUT ZONE Brand Vision — Beyond Limits, Beyond Imagination</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://outzone-kw.com/assets/feedback/feedback-7.jpeg</image:loc>
+      <image:title>OUT ZONE Verified Client Feedback &amp; Testimonials in Kuwait</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://outzone-kw.com/llm.txt</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://outzone-kw.com/llms.txt</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

@@ -6,6 +6,7 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FooterProps {
   onOpenPrivacy: () => void;
@@ -13,6 +14,8 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
+  const { isRTL } = useLanguage();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -24,10 +27,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
-          
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 ${
+            isRTL ? 'text-right' : 'text-left'
+          }`}
+        >
           {/* Column 1: Brand Info & Social (Lg: 4 cols) */}
-          <div className="lg:col-span-4 space-y-5 text-right">
+          <div className="lg:col-span-4 space-y-5">
             <a href="#hero" className="inline-block">
               <img
                 src="/assets/logo/logo-outzone.png"
@@ -36,7 +42,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
               />
             </a>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-              وكالة تسويق رقمي متكاملة. نصنع المحتوى الإبداعي، ندير الحملات الإعلانية الممولة، ونقود علامتك التجارية نحو الصدارة ومضاعفة المبيعات.
+              {isRTL
+                ? 'وكالة تسويق رقمي وتطوير مواقع متكاملة. نصمم المواقع الإلكترونية مع إيميل بزنس رسمي، نصنع المحتوى الإبداعي، وندير الحملات الإعلانية الممولة لمضاعفة مبيعاتك.'
+                : 'Full-service digital marketing & web agency. We build websites with official business email, craft viral Reels, and manage high-ROAS paid ad campaigns.'}
             </p>
 
             <div className="flex items-center gap-3 pt-2">
@@ -69,87 +77,104 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
           </div>
 
           {/* Column 2: Quick Links (Lg: 2 cols) */}
-          <div className="lg:col-span-2 space-y-4 text-right">
+          <div className="lg:col-span-2 space-y-4">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              روابط سريعة
+              {isRTL ? 'روابط سريعة' : 'Quick Links'}
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm">
               <li>
                 <a href="#hero" className="hover:text-brandOrange-400 transition-colors">
-                  الرئيسية
+                  {isRTL ? 'الرئيسية' : 'Home'}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-brandOrange-400 transition-colors">
-                  خدماتنا المتكاملة
+                  {isRTL ? 'خدماتنا المتكاملة' : 'Our Services'}
                 </a>
               </li>
               <li>
                 <a href="#packages" className="hover:text-brandOrange-400 transition-colors">
-                  باقات الأسعار
+                  {isRTL ? 'باقات الأسعار' : 'Pricing Packages'}
                 </a>
               </li>
               <li>
                 <a href="#portfolio" className="hover:text-brandOrange-400 transition-colors">
-                  معرض الأعمال
+                  {isRTL ? 'أعمالنا مع العملاء' : 'Client Portfolio'}
+                </a>
+              </li>
+              <li>
+                <a href="#feedback" className="hover:text-brandOrange-400 transition-colors">
+                  {isRTL ? 'آراء العملاء' : 'Client Reviews'}
                 </a>
               </li>
               <li>
                 <a href="#about" className="hover:text-brandOrange-400 transition-colors">
-                  من نحن
+                  {isRTL ? 'ليش تختارنا؟' : 'Why Choose Us'}
                 </a>
               </li>
               <li>
                 <a href="#contact" className="hover:text-brandOrange-400 transition-colors">
-                  تواصل معنا
+                  {isRTL ? 'تواصل ويانا' : 'Contact Us'}
                 </a>
               </li>
             </ul>
           </div>
 
           {/* Column 3: Services Links (Lg: 3 cols) */}
-          <div className="lg:col-span-3 space-y-4 text-right">
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              خدماتنا التسويقية
+              {isRTL ? 'أبرز خدماتنا' : 'Core Services'}
             </h4>
             <ul className="space-y-2.5 text-xs sm:text-sm">
               <li>
-                <a href="#services" className="hover:text-electric-400 transition-colors">
-                  الإعلانات الممولة (Meta & TikTok)
+                <a href="#services" className="hover:text-brandOrange-400 font-semibold text-amber-300 transition-colors">
+                  {isRTL
+                    ? 'إنشاء مواقع إلكترونية + إيميل بزنس رسمي'
+                    : 'Website Development + Official Business Email'}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-electric-400 transition-colors">
-                  صناعة المحتوى وتصوير ريلز
+                  {isRTL
+                    ? 'الإعلانات الممولة (Meta & TikTok & Google)'
+                    : 'Paid Media Buying (Meta, TikTok & Google)'}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-electric-400 transition-colors">
-                  إدارة السوشيال ميديا والتفاعل
+                  {isRTL
+                    ? 'صناعة المحتوى ومونتاج الريلز 4K'
+                    : 'Content Creation & 4K Reels Editing'}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-electric-400 transition-colors">
-                  التصميم الإبداعي والهويات
+                  {isRTL
+                    ? 'إدارة حسابات السوشيال ميديا'
+                    : 'Full Social Media Management'}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-electric-400 transition-colors">
-                  الاستراتيجيات التسويقية
+                  {isRTL
+                    ? 'التصميم الإبداعي والهويات البصرية'
+                    : 'Creative Design & Brand Identity'}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-electric-400 transition-colors">
-                  التحليل وتقارير الأداء الشهرية
+                  {isRTL
+                    ? 'الخطط التسويقية وتقارير الأداء'
+                    : 'Marketing Strategy & ROI Analytics'}
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Direct Contact Details (Lg: 3 cols — No Newsletter, No Address) */}
-          <div className="lg:col-span-3 space-y-4 text-right">
+          {/* Column 4: Direct Contact Details (Lg: 3 cols) */}
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              تواصل مباشر
+              {isRTL ? 'تواصل مباشر' : 'Direct Contact'}
             </h4>
             <div className="space-y-3 text-xs sm:text-sm">
               <a
@@ -175,13 +200,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
               </a>
             </div>
           </div>
-
         </div>
 
         {/* Bottom Copyright and Legal Bar */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            جميع الحقوق محفوظة © 2026 <span className="text-slate-300 font-bold">OUT ZONE</span>.
+            {isRTL ? 'جميع الحقوق محفوظة © 2026 ' : 'All rights reserved © 2026 '}
+            <span className="text-slate-300 font-bold">OUT ZONE</span>.
           </div>
 
           <div className="flex items-center gap-6">
@@ -189,26 +214,25 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
               onClick={onOpenPrivacy}
               className="hover:text-slate-300 transition-colors"
             >
-              سياسة الخصوصية
+              {isRTL ? 'سياسة الخصوصية' : 'Privacy Policy'}
             </button>
             <span>•</span>
             <button
               onClick={onOpenTerms}
               className="hover:text-slate-300 transition-colors"
             >
-              الشروط والأحكام
+              {isRTL ? 'الشروط والأحكام' : 'Terms & Conditions'}
             </button>
             <span>•</span>
             <button
               onClick={scrollToTop}
               className="flex items-center gap-1 hover:text-brandOrange-400 transition-colors"
             >
-              <span>للأعلى</span>
+              <span>{isRTL ? 'للأعلى' : 'Back to Top'}</span>
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
-
       </div>
     </footer>
   );
