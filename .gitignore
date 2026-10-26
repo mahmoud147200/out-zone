@@ -43,6 +43,7 @@ Thumbs.db
 # Temporary & local raw design folders (already processed into public/assets/)
 *.local
 temp_*/
+scripts/temp_*/
 profile_*/
 cdp_profile/
 about us/
@@ -50,3 +51,5 @@ logo out zone/
 logos clint/
 our service/
 باقات خاصة بنا/
+desgien/
+vedio/

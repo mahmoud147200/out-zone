@@ -12,29 +12,34 @@ import { KuwaitCTA } from './components/KuwaitCTA';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { PosterModal } from './components/PosterModal';
-import { ProjectModal } from './components/ProjectModal';
+import { ClientShowcaseModal } from './components/ClientShowcaseModal';
 import { LegalModal } from './components/LegalModal';
 import { ScrollProgress3D } from './components/ScrollReveal3D';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
-import { PortfolioItem, SITE_DATA, openWhatsAppDirect } from './data/content';
+import {
+  CLIENTS,
+  ClientItem,
+  ClientPoster,
+  SITE_DATA,
+  openWhatsAppDirect,
+} from './data/content';
 
 export const App: React.FC = () => {
+  const [activeClient, setActiveClient] = useState<ClientItem>(CLIENTS[0]);
+  const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
+
   const [posterModalState, setPosterModalState] = useState<{
     isOpen: boolean;
     posterUrl: string;
     title: string;
+    posters?: ClientPoster[];
+    currentIndex?: number;
   }>({
     isOpen: false,
     posterUrl: '',
     title: '',
-  });
-
-  const [projectModalState, setProjectModalState] = useState<{
-    isOpen: boolean;
-    project: PortfolioItem | null;
-  }>({
-    isOpen: false,
-    project: null,
+    posters: undefined,
+    currentIndex: 0,
   });
 
   const [legalModalState, setLegalModalState] = useState<{
@@ -47,24 +52,43 @@ export const App: React.FC = () => {
     type: 'privacy',
   });
 
-  // Direct WhatsApp handler — No form modals, opens WhatsApp directly on +201067989456
+  // Direct WhatsApp handler — opens WhatsApp directly on +201067989456
   const handleOpenConsultation = (topicOrPackage?: string) => {
     openWhatsAppDirect(topicOrPackage);
   };
 
+  // Single poster viewer (used by Services, Packages, WhyUs)
   const handleOpenPosterModal = (posterUrl: string, title: string) => {
     setPosterModalState({
       isOpen: true,
       posterUrl,
       title,
+      posters: undefined,
+      currentIndex: 0,
     });
   };
 
-  const handleOpenProjectModal = (project: PortfolioItem) => {
-    setProjectModalState({
+  // Multi-poster 3D gallery viewer (used by Client Portfolio)
+  const handleOpenClientPosterLightbox = (
+    posters: ClientPoster[],
+    index: number
+  ) => {
+    const target = posters[index] || posters[0];
+    if (!target) return;
+    setPosterModalState({
       isOpen: true,
-      project,
+      posterUrl: target.file,
+      title: target.title,
+      posters,
+      currentIndex: index,
     });
+  };
+
+  const handleSelectClient = (client: ClientItem, openModal = true) => {
+    setActiveClient(client);
+    if (openModal) {
+      setIsClientModalOpen(true);
+    }
   };
 
   return (
@@ -83,8 +107,10 @@ export const App: React.FC = () => {
         {/* 2. Stats Bar */}
         <StatsBar />
 
-        {/* 3. Client Partners */}
-        <ClientLogos />
+        {/* 3. Client Partners (Clickable to open Client 3D Showcase) */}
+        <ClientLogos
+          onSelectClient={(client) => handleSelectClient(client, true)}
+        />
 
         {/* 4. Integrated Marketing Services */}
         <Services
@@ -98,10 +124,12 @@ export const App: React.FC = () => {
           onOpenPosterModal={handleOpenPosterModal}
         />
 
-        {/* 6. Portfolio Showcase */}
+        {/* 6. Interactive Client Portfolio Showcase (صفحة أعمالنا) */}
         <Portfolio
-          onSelectProject={handleOpenProjectModal}
-          onOpenConsultation={() => handleOpenConsultation()}
+          activeClient={activeClient}
+          onSelectClient={handleSelectClient}
+          onOpenPosterLightbox={handleOpenClientPosterLightbox}
+          onOpenConsultation={handleOpenConsultation}
         />
 
         {/* 7. Case Studies */}
@@ -116,7 +144,7 @@ export const App: React.FC = () => {
         {/* 9. Digital Growth CTA */}
         <KuwaitCTA onOpenConsultation={() => handleOpenConsultation()} />
 
-        {/* 10. Direct WhatsApp & Contact Channels (No Form) */}
+        {/* 10. Direct WhatsApp & Contact Channels */}
         <ContactSection />
       </main>
 
@@ -152,7 +180,17 @@ export const App: React.FC = () => {
         </span>
       </a>
 
-      {/* Interactive Modals (Posters, Projects, Legal) */}
+      {/* 3D Client Portfolio & Business Card Modal */}
+      <ClientShowcaseModal
+        isOpen={isClientModalOpen}
+        onClose={() => setIsClientModalOpen(false)}
+        client={activeClient}
+        onSelectClient={(c) => setActiveClient(c)}
+        onOpenPosterLightbox={handleOpenClientPosterLightbox}
+        onOpenConsultation={handleOpenConsultation}
+      />
+
+      {/* 3D Poster Lightbox Modal */}
       <PosterModal
         isOpen={posterModalState.isOpen}
         onClose={() =>
@@ -160,17 +198,14 @@ export const App: React.FC = () => {
         }
         posterUrl={posterModalState.posterUrl}
         title={posterModalState.title}
-      />
-
-      <ProjectModal
-        isOpen={projectModalState.isOpen}
-        onClose={() =>
-          setProjectModalState((prev) => ({ ...prev, isOpen: false }))
+        posters={posterModalState.posters}
+        currentIndex={posterModalState.currentIndex}
+        onChangeIndex={(newIdx) =>
+          setPosterModalState((prev) => ({ ...prev, currentIndex: newIdx }))
         }
-        project={projectModalState.project}
-        onOpenConsultation={handleOpenConsultation}
       />
 
+      {/* Legal Modal */}
       <LegalModal
         isOpen={legalModalState.isOpen}
         onClose={() =>

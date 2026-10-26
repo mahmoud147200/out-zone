@@ -1,149 +1,201 @@
 import React, { useState } from 'react';
-import { PORTFOLIO_ITEMS, PortfolioItem } from '../data/content';
-import { Briefcase, ArrowUpLeft, TrendingUp, Eye } from 'lucide-react';
+import {
+  CLIENTS,
+  ClientItem,
+  ClientPoster,
+} from '../data/content';
+import {
+  Briefcase,
+  Image as ImageIcon,
+  Film,
+  Sparkles,
+  ArrowUpLeft,
+  Eye,
+} from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { Reveal3D, TiltCard3D } from './ScrollReveal3D';
+import { ClientPortfolioStage } from './ClientShowcaseModal';
 
 interface PortfolioProps {
-  onSelectProject: (item: PortfolioItem) => void;
-  onOpenConsultation: () => void;
+  activeClient: ClientItem;
+  onSelectClient: (client: ClientItem, openModal?: boolean) => void;
+  onOpenPosterLightbox: (posters: ClientPoster[], index: number) => void;
+  onOpenConsultation: (topic?: string) => void;
 }
 
-export const Portfolio: React.FC<PortfolioProps> = ({ onSelectProject, onOpenConsultation }) => {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+export const Portfolio: React.FC<PortfolioProps> = ({
+  activeClient,
+  onSelectClient,
+  onOpenPosterLightbox,
+  onOpenConsultation,
+}) => {
+  const [activeSector, setActiveSector] = useState<string>('all');
 
-  const categories = [
-    { label: 'الكل', slug: 'all' },
-    { label: 'مطاعم ومقاهي', slug: 'restaurants' },
-    { label: 'مستحضرات وتجميل', slug: 'cosmetics' },
-    { label: 'عيادات ورياضة', slug: 'clinics' },
-    { label: 'أزياء وتجزئة', slug: 'fashion' },
-    { label: 'عقارات واستثمار', slug: 'realestate' },
+  const sectors = [
+    { label: 'كل العملاء', slug: 'all' },
+    { label: 'مطاعم وكافيهات', slug: 'restaurants' },
+    { label: 'عطور وتجميل', slug: 'cosmetics' },
+    { label: 'عيادات ومراكز طبية', slug: 'clinics' },
+    { label: 'أنظمة وتقنية ذكية', slug: 'tech' },
+    { label: 'صناعة وتدريب', slug: 'other' },
   ];
 
-  const filteredItems =
-    activeCategory === 'all'
-      ? PORTFOLIO_ITEMS
-      : PORTFOLIO_ITEMS.filter((item) => item.categorySlug === activeCategory);
+  const filteredClients =
+    activeSector === 'all'
+      ? CLIENTS
+      : activeSector === 'other'
+      ? CLIENTS.filter(
+          (c) => c.categorySlug === 'industry' || c.categorySlug === 'coaching'
+        )
+      : CLIENTS.filter((c) => c.categorySlug === activeSector);
+
+  const totalPosters = CLIENTS.reduce((acc, c) => acc + c.posters.length, 0);
+  const totalVideos = CLIENTS.reduce((acc, c) => acc + c.videos.length, 0);
 
   return (
-    <section id="portfolio" className="py-20 lg:py-28 bg-navy-950 relative overflow-hidden w-full">
-      {/* Background glow */}
+    <section
+      id="portfolio"
+      className="py-20 lg:py-28 bg-navy-950 relative overflow-hidden w-full border-t border-white/5"
+    >
+      {/* Background 3D Ambient Lighting */}
       <div className="absolute top-1/4 -left-20 w-80 sm:w-96 h-80 sm:h-96 bg-brandOrange-500/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-20 w-80 sm:w-96 h-80 sm:h-96 bg-electric-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        
-        {/* Section Header with 3D Scroll Reveal */}
-        <Reveal3D direction="up" className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy-900 border border-electric-500/30 text-xs font-semibold text-electric-400 mb-4 shadow-[0_0_12px_rgba(14,165,233,0.15)]">
-            <Briefcase className="w-4 h-4 text-electric-400" />
-            <span>معرض الأعمال والإنجازات</span>
+        {/* Section Header */}
+        <Reveal3D direction="up" className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy-900 border border-brandOrange-500/35 text-xs font-bold text-brandOrange-400 mb-4 shadow-[0_0_16px_rgba(249,115,22,0.18)]">
+            <Briefcase className="w-4 h-4 text-brandOrange-400" />
+            <span>معرض أعمالنا مع شركاء النجاح • +{totalPosters} تصميم و +{totalVideos} فيديو</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            شاهد بعضاً من{' '}
-            <span className="bg-gradient-to-l from-brandOrange-400 to-amber-300 bg-clip-text text-transparent">
-              أعمالنا وإنجازاتنا
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+            اضغط على شعار أي عميل{' '}
+            <span className="bg-gradient-to-l from-brandOrange-400 via-amber-300 to-electric-400 bg-clip-text text-transparent">
+              واستكشف أعمالنا معه
             </span>
           </h2>
+
           <p className="text-sm sm:text-base lg:text-lg text-slate-300 mt-4 leading-relaxed">
-            نتائج حقيقية وملموسة وصور حية من حملات ومشاريع حققناها مع شركائنا في مختلف القطاعات التجارية.
+            عند الضغط على لوجو أي عميل يظهر لك الكرت التعريفي الخاص بمجال البزنس، وكافة البوسترات الإعلانية والفيديوهات التي صممناها وأنتجناها له بعرض ثلاثي الأبعاد أنيق.
           </p>
 
-          {/* Category Filter Pills */}
+          {/* Sector Filter Pills */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-6 sm:mt-8">
-            {categories.map((cat) => (
+            {sectors.map((sec) => (
               <button
-                key={cat.slug}
-                onClick={() => setActiveCategory(cat.slug)}
-                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                  activeCategory === cat.slug
+                key={sec.slug}
+                onClick={() => setActiveSector(sec.slug)}
+                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 ${
+                  activeSector === sec.slug
                     ? 'bg-gradient-to-r from-brandOrange-600 to-amber-500 text-white shadow-[0_0_20px_rgba(249,115,22,0.5)] scale-105'
                     : 'bg-navy-900/90 hover:bg-navy-800 text-slate-300 hover:text-white border border-white/10'
                 }`}
               >
-                {cat.label}
+                {sec.label}
               </button>
             ))}
           </div>
         </Reveal3D>
 
-        {/* Portfolio Grid with 3D Cards & Crystal-Clear HD Images */}
+        {/* Interactive 3D Client Logo Cards Grid */}
         <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-6 mb-14 sm:mb-18"
           style={{ perspective: '1400px' }}
         >
           <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, idx) => (
-              <TiltCard3D
-                key={item.id}
-                index={idx}
-                intensity={11}
-                onClick={() => onSelectProject(item)}
-                className="group rounded-3xl overflow-hidden bg-navy-900/90 border border-white/15 hover:border-brandOrange-500/70 transition-colors duration-500 cursor-pointer shadow-[0_15px_40px_rgba(0,0,0,0.55)] hover:shadow-[0_20px_50px_rgba(249,115,22,0.22)] flex flex-col justify-between"
-              >
-                {/* HD Image Container — Zero Blur, High Clarity */}
-                <div className="relative aspect-[16/11] overflow-hidden bg-navy-950">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover object-center brightness-105 contrast-[1.04] group-hover:scale-110 transition-transform duration-700 ease-out"
-                  />
-
-                  {/* Subtle bottom gradient only at the very bottom edge for badge readability */}
-                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-navy-950/90 via-navy-950/30 to-transparent pointer-events-none" />
-
-                  {/* Category Pill on Image */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-navy-950/85 text-brandOrange-400 border border-brandOrange-500/40 shadow-lg">
-                      {item.category}
+            {filteredClients.map((client, idx) => {
+              const isSelected = activeClient.id === client.id;
+              return (
+                <TiltCard3D
+                  key={client.id}
+                  index={idx}
+                  intensity={12}
+                  onClick={() => onSelectClient(client, true)}
+                  className={`group rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer flex flex-col justify-between p-4 sm:p-6 border ${
+                    isSelected
+                      ? 'bg-gradient-to-b from-navy-800/95 to-navy-950 border-brandOrange-500 shadow-[0_20px_50px_rgba(249,115,22,0.28)] ring-1 ring-brandOrange-400/50'
+                      : 'bg-navy-900/85 hover:bg-navy-900 border-white/10 hover:border-brandOrange-500/60 shadow-[0_15px_35px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_45px_rgba(249,115,22,0.2)]'
+                  }`}
+                >
+                  {/* Top Row: Active Badge & Quick View Icon */}
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-extrabold bg-brandOrange-500/15 text-brandOrange-400 border border-brandOrange-500/30 truncate max-w-[78%]">
+                      {client.category}
                     </span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 group-hover:bg-brandOrange-500 text-slate-300 group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0">
+                      <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </div>
                   </div>
 
-                  {/* Quick View Icon on Hover */}
-                  <div className="absolute top-4 left-4 z-10 w-9 h-9 rounded-full bg-navy-950/80 border border-white/20 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 shadow-lg">
-                    <Eye className="w-4 h-4 text-brandOrange-400" />
+                  {/* Center: 3D Elevated Official Client Logo */}
+                  <div className="my-2 py-5 sm:py-6 px-4 rounded-2xl bg-navy-950/90 border border-white/10 group-hover:border-brandOrange-500/30 flex items-center justify-center relative overflow-hidden shadow-inner">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-brandOrange-500/5 via-transparent to-electric-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <img
+                      src={client.logo}
+                      alt={client.name}
+                      className="h-14 sm:h-20 max-w-full object-contain group-hover:scale-112 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.18)]"
+                    />
                   </div>
 
-                  {/* Growth / ROAS Badge on Image */}
-                  <div className="absolute bottom-3.5 left-4 z-10 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-500/95 text-navy-950 text-xs font-black shadow-[0_4px_15px_rgba(16,185,129,0.5)]">
-                    <TrendingUp className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span>{item.result}</span>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-6 flex flex-col justify-between flex-grow bg-gradient-to-b from-navy-900/95 to-navy-950">
-                  <div>
-                    <h3 className="text-xl font-extrabold text-white mb-2 group-hover:text-brandOrange-400 transition-colors">
-                      {item.title}
+                  {/* Client Name & Counters */}
+                  <div className="mt-3 text-right">
+                    <h3 className="text-sm sm:text-lg font-black text-white group-hover:text-brandOrange-400 transition-colors truncate">
+                      {client.arabicName}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-300 line-clamp-2 leading-relaxed mb-4">
-                      {item.description}
+                    <p className="text-[11px] sm:text-xs text-slate-400 line-clamp-1 mt-0.5">
+                      {client.tagline}
                     </p>
-                  </div>
 
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold text-slate-300 group-hover:text-brandOrange-400 transition-colors">
-                    <span>عرض تفاصيل المشروع والنتائج</span>
-                    <ArrowUpLeft className="w-4 h-4 group-hover:-translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
+                    {/* Posters & Videos Count Badges */}
+                    <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mt-3 pt-3 border-t border-white/10">
+                      <div className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-white/[0.04] border border-white/5 text-[10px] sm:text-xs font-bold text-slate-200">
+                        <ImageIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brandOrange-400 shrink-0" />
+                        <span>{client.posters.length} بوستر</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-white/[0.04] border border-white/5 text-[10px] sm:text-xs font-bold text-slate-200">
+                        <Film className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-electric-400 shrink-0" />
+                        <span>{client.videos.length} فيديو</span>
+                      </div>
+                    </div>
+
+                    {/* Click Prompt */}
+                    <div className="mt-3 flex items-center justify-between text-[10px] sm:text-xs font-extrabold text-brandOrange-400 group-hover:text-amber-300">
+                      <span>عرض الكرت والأعمال</span>
+                      <ArrowUpLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
+                    </div>
                   </div>
-                </div>
-              </TiltCard3D>
-            ))}
+                </TiltCard3D>
+              );
+            })}
           </AnimatePresence>
         </div>
 
-        {/* Bottom CTA for portfolio */}
-        <Reveal3D delay={0.15} className="mt-12 sm:mt-14 text-center">
-          <button
-            onClick={onOpenConsultation}
-            className="inline-flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3.5 rounded-2xl sm:rounded-full text-xs sm:text-base font-bold text-white bg-navy-900 hover:bg-navy-800 border border-white/15 hover:border-brandOrange-500/50 shadow-lg hover:shadow-brandOrange-500/20 transition-all group max-w-full"
-          >
-            <span>هل تريد نتائج مماثلة لمشروعك؟</span>
-            <span className="text-brandOrange-400 group-hover:underline">تحدث معنا الآن ←</span>
-          </button>
-        </Reveal3D>
+        {/* Inline 3D Client Portfolio Stage (الكرت التعريفي + البوسترات + الفيديوهات) */}
+        <div
+          id="client-works-stage"
+          className="pt-8 sm:pt-10 border-t border-white/10"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <div className="flex items-center gap-2.5">
+              <span className="w-3 h-3 rounded-full bg-brandOrange-500 animate-ping" />
+              <h3 className="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-brandOrange-400" />
+                <span>استعراض مباشر لأعمال العميل المختار:</span>
+                <span className="text-brandOrange-400">{activeClient.arabicName}</span>
+              </h3>
+            </div>
+          </div>
 
+          <ClientPortfolioStage
+            client={activeClient}
+            onSelectClient={(c) => onSelectClient(c, false)}
+            onOpenPosterLightbox={onOpenPosterLightbox}
+            onOpenConsultation={onOpenConsultation}
+            isModal={false}
+            onOpenFullModal={() => onSelectClient(activeClient, true)}
+          />
+        </div>
       </div>
     </section>
   );
